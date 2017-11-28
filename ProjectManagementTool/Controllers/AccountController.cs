@@ -152,6 +152,17 @@ namespace ProjectManagementTool.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name , Status = model.Status, Designation = model.Designation };
+                string role = "";
+                if(model.Designation == "ProjectManager")
+                {
+                    role = "ProjectManager";
+                }
+                else
+                {
+                    role = "Employee";
+                }
+
+                UserManager.AddToRole(User.Identity.GetUserId(),role);
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

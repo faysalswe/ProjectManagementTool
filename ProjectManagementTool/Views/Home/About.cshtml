@@ -1,11 +1,12 @@
-﻿@model IEnumerable<ProjectManagementTool.Models.Content>
+﻿@*@model IEnumerable<ProjectManagementTool.Models.Content>*@
+
 @{
     ViewBag.Title = "About";
 }
 <h2>@ViewBag.Title.</h2>
 <h3>@ViewBag.Message</h3>
 
-@foreach (var item in Model)
+@*@foreach (var item in Model)
 {
     <a href="@Url.Content(item.Path)">@item.Name</a><br />
-}
+}*@
