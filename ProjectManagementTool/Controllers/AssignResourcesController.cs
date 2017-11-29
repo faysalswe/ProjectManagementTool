@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ProjectManagementTool.Models;
+using Microsoft.AspNet.Identity;
 
 namespace ProjectManagementTool.Controllers
 {
@@ -54,6 +55,7 @@ namespace ProjectManagementTool.Controllers
         {
             if (ModelState.IsValid)
             {
+                assignResource.AssignerId = User.Identity.GetUserId();
                 db.AssignResources.Add(assignResource);
                 db.SaveChanges();
                 return RedirectToAction("Index");

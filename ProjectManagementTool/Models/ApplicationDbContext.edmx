@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ProjectManagementToolModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ProjectManagementToolModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AssignResource">
           <Key>
             <PropertyRef Name="Id" />
@@ -12,6 +12,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProjectId" Type="int" />
           <Property Name="UserId" Type="nvarchar" MaxLength="128" />
+          <Property Name="AssignerId" Type="nvarchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="Comment">
           <Key>
@@ -21,6 +22,7 @@
           <Property Name="TaskId" Type="int" />
           <Property Name="Comment" Type="nvarchar" MaxLength="200" />
           <Property Name="DateTime" Type="datetime" />
+          <Property Name="commenterUserId" Type="nvarchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="Project">
           <Key>
@@ -35,6 +37,7 @@
           <Property Name="Duration" Type="int" />
           <Property Name="FilesPath" Type="nvarchar" MaxLength="100" />
           <Property Name="Status" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatorOwnerId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="Task">
           <Key>
@@ -46,6 +49,8 @@
           <Property Name="Description" Type="nvarchar" MaxLength="256" />
           <Property Name="Duedate" Type="date" />
           <Property Name="Priority" Type="nvarchar" MaxLength="50" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatorOwnerId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <Association Name="FK__AssignRes__Proje__34C8D9D1">
           <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
@@ -101,8 +106,7 @@
             <End Role="Task" EntitySet="Task" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ProjectManagementToolModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -114,6 +118,7 @@
           <Property Name="ProjectId" Type="Int32" />
           <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Project" Relationship="Self.FK__AssignRes__Proje__34C8D9D1" FromRole="AssignResource" ToRole="Project" />
+          <Property Name="AssignerId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Comment">
           <Key>
@@ -124,6 +129,7 @@
           <Property Name="Comment1" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="DateTime" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Task" Relationship="Self.FK__Comment__TaskId__3C69FB99" FromRole="Comment" ToRole="Task" />
+          <Property Name="commenterUserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Project">
           <Key>
@@ -140,6 +146,7 @@
           <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AssignResources" Relationship="Self.FK__AssignRes__Proje__34C8D9D1" FromRole="Project" ToRole="AssignResource" />
           <NavigationProperty Name="Tasks" Relationship="Self.FK__Task__ProjectId__38996AB5" FromRole="Project" ToRole="Task" />
+          <Property Name="CreatorOwnerId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Task">
           <Key>
@@ -153,6 +160,8 @@
           <Property Name="Priority" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Comments" Relationship="Self.FK__Comment__TaskId__3C69FB99" FromRole="Task" ToRole="Comment" />
           <NavigationProperty Name="Project" Relationship="Self.FK__Task__ProjectId__38996AB5" FromRole="Task" ToRole="Project" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatorOwnerId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK__AssignRes__Proje__34C8D9D1">
           <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
@@ -217,6 +226,7 @@
           <EntitySetMapping Name="AssignResources">
             <EntityTypeMapping TypeName="ProjectManagementToolModel.AssignResource">
               <MappingFragment StoreEntitySet="AssignResource">
+                <ScalarProperty Name="AssignerId" ColumnName="AssignerId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -226,6 +236,7 @@
           <EntitySetMapping Name="Comments">
             <EntityTypeMapping TypeName="ProjectManagementToolModel.Comment">
               <MappingFragment StoreEntitySet="Comment">
+                <ScalarProperty Name="commenterUserId" ColumnName="commenterUserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="TaskId" ColumnName="TaskId" />
                 <ScalarProperty Name="Comment1" ColumnName="Comment" />
@@ -236,6 +247,7 @@
           <EntitySetMapping Name="Projects">
             <EntityTypeMapping TypeName="ProjectManagementToolModel.Project">
               <MappingFragment StoreEntitySet="Project">
+                <ScalarProperty Name="CreatorOwnerId" ColumnName="CreatorOwnerId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="CodeName" ColumnName="CodeName" />
@@ -251,6 +263,8 @@
           <EntitySetMapping Name="Tasks">
             <EntityTypeMapping TypeName="ProjectManagementToolModel.Task">
               <MappingFragment StoreEntitySet="Task">
+                <ScalarProperty Name="CreatorOwnerId" ColumnName="CreatorOwnerId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />

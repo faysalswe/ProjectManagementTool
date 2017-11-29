@@ -7,9 +7,11 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ProjectManagementTool.Models;
+using Microsoft.AspNet.Identity;
 
 namespace ProjectManagementTool.Controllers
 {
+    [Authorize(Roles = "Employee")]
     public class TasksController : Controller
     {
         private ProjectManagementToolEntities db = new ProjectManagementToolEntities();
@@ -48,10 +50,12 @@ namespace ProjectManagementTool.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,ProjectId,UserId,Description,Duedate,Priority")] Task task)
+        public ActionResult Create([Bind(Include = "Id,ProjectId,UserId,Description,Duedate,Priority,Name")] Task task)
         {
             if (ModelState.IsValid)
             {
+                task.CreatorOwnerId = User.Identity.GetUserId();
+
                 db.Tasks.Add(task);
                 db.SaveChanges();
                 return RedirectToAction("Index");

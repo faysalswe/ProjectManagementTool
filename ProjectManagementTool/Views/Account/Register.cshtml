@@ -2,15 +2,15 @@
 @{
     ViewBag.Title = "Add User";
 }
-
-<h2>@ViewBag.Title.</h2>
-
+<h4>@ViewBag.Title</h4>
+<hr />
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <hr />
+
     @Html.ValidationSummary("", new { @class = "text-danger" })
 
+    
     <div class="form-group">
         @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">

@@ -17,6 +17,7 @@ namespace ProjectManagementTool.Models
         public int Id { get; set; }
         public Nullable<int> ProjectId { get; set; }
         public string UserId { get; set; }
+        public string AssignerId { get; set; }
     
         public virtual Project Project { get; set; }
     }

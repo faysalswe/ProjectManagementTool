@@ -26,6 +26,8 @@ namespace ProjectManagementTool.Models
         public string Description { get; set; }
         public Nullable<System.DateTime> Duedate { get; set; }
         public string Priority { get; set; }
+        public string Name { get; set; }
+        public string CreatorOwnerId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }

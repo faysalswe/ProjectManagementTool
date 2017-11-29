@@ -52,6 +52,12 @@ namespace ProjectManagementTool.Controllers
             }
         }
 
+        [Authorize(Roles = "ItAdmin")]
+        public ActionResult Index()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            return View(db.Users.ToList());
+        }
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -136,7 +142,8 @@ namespace ProjectManagementTool.Controllers
 
         //
         // GET: /Account/Register
-        [AllowAnonymous]
+        //[AllowAnonymous]
+        [Authorize(Roles = "ItAdmin")]
         public ActionResult Register()
         {
             return View();
@@ -145,7 +152,8 @@ namespace ProjectManagementTool.Controllers
         //
         // POST: /Account/Register
         [HttpPost]
-        [AllowAnonymous]
+        //[AllowAnonymous]
+        [Authorize(Roles = "ItAdmin")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
@@ -160,6 +168,7 @@ namespace ProjectManagementTool.Controllers
                 else
                 {
                     role = "Employee";
+                   
                 }
 
                 var result = await UserManager.CreateAsync(user, model.Password);
@@ -419,6 +428,7 @@ namespace ProjectManagementTool.Controllers
         {
             if (disposing)
             {
+               
                 if (_userManager != null)
                 {
                     _userManager.Dispose();

@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ProjectManagementTool.Models;
+using Microsoft.AspNet.Identity;
 
 namespace ProjectManagementTool.Controllers
 {
@@ -39,7 +40,7 @@ namespace ProjectManagementTool.Controllers
         // GET: Comments/Create
         public ActionResult Create()
         {
-            ViewBag.TaskId = new SelectList(db.Tasks, "Id", "UserId");
+            ViewBag.TaskId = new SelectList(db.Tasks, "Id", "Name");
             return View();
         }
 
@@ -52,12 +53,13 @@ namespace ProjectManagementTool.Controllers
         {
             if (ModelState.IsValid)
             {
+                comment.commenterUserId = User.Identity.GetUserId();
                 db.Comments.Add(comment);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.TaskId = new SelectList(db.Tasks, "Id", "UserId", comment.TaskId);
+            ViewBag.TaskId = new SelectList(db.Tasks, "Id", "Name", comment.TaskId);
             return View(comment);
         }
 

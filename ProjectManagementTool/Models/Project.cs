@@ -30,6 +30,7 @@ namespace ProjectManagementTool.Models
         public Nullable<int> Duration { get; set; }
         public string FilesPath { get; set; }
         public string Status { get; set; }
+        public string CreatorOwnerId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AssignResource> AssignResources { get; set; }

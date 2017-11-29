@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using ProjectManagementTool.Models;
 using System.IO;
+using Microsoft.AspNet.Identity;
 
 namespace ProjectManagementTool.Controllers
 {
@@ -16,12 +17,14 @@ namespace ProjectManagementTool.Controllers
         private ProjectManagementToolEntities db = new ProjectManagementToolEntities();
 
         // GET: Projects
+        [Authorize(Roles = "ProjectManager")]
         public ActionResult Index()
         {
             return View(db.Projects.ToList());
         }
 
         // GET: Projects/Details/5
+        [Authorize(Roles = "ProjectManager")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -37,6 +40,7 @@ namespace ProjectManagementTool.Controllers
         }
 
         // GET: Projects/Create
+        [Authorize(Roles = "ProjectManager")]
         public ActionResult Create()
         {
             return View();
@@ -45,10 +49,12 @@ namespace ProjectManagementTool.Controllers
        
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ProjectManager")]
         public ActionResult Create([Bind(Include = "Id,Name,CodeName,Description,PossibleStartDate,PossibleEndDate,Duration,FilesPath,Status,Files")] Project project)
         {
             if (ModelState.IsValid)
             {
+                project.CreatorOwnerId = User.Identity.GetUserId();
                 Directory.CreateDirectory(Server.MapPath("~/Content/ProjectFile" + "\\" + project.Name));
 
                 foreach (var file in project.Files)
@@ -71,6 +77,7 @@ namespace ProjectManagementTool.Controllers
         }
 
         // GET: Projects/Edit/5
+        [Authorize(Roles = "ProjectManager")]
         public ActionResult Edit(int? id)
         {
             if (id == null)

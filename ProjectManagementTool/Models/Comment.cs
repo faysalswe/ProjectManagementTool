@@ -18,6 +18,7 @@ namespace ProjectManagementTool.Models
         public Nullable<int> TaskId { get; set; }
         public string Comment1 { get; set; }
         public Nullable<System.DateTime> DateTime { get; set; }
+        public string commenterUserId { get; set; }
     
         public virtual Task Task { get; set; }
     }
