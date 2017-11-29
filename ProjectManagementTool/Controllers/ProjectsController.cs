@@ -36,6 +36,17 @@ namespace ProjectManagementTool.Controllers
             {
                 return HttpNotFound();
             }
+            string path = Server.MapPath(project.FilesPath);
+            List<Content> Files = new List<Content>();
+            foreach (var files in Directory.GetFiles(path))
+            {
+                FileInfo info = new FileInfo(files);
+                Content content = new Content();
+                content.Path = project.FilesPath +"/"+ Path.GetFileName(info.FullName);
+                content.Name = Path.GetFileName(info.FullName);
+                Files.Add(content);
+            }
+            ViewBag.FileList = Files;
             return View(project);
         }
 
@@ -55,7 +66,7 @@ namespace ProjectManagementTool.Controllers
             if (ModelState.IsValid)
             {
                 project.CreatorOwnerId = User.Identity.GetUserId();
-                Directory.CreateDirectory(Server.MapPath("~/Content/ProjectFile" + "\\" + project.Name));
+                Directory.CreateDirectory(Server.MapPath("~/Content/ProjectFile" + "/" + project.Name));
 
                 foreach (var file in project.Files)
                 {
@@ -67,7 +78,7 @@ namespace ProjectManagementTool.Controllers
                     }
                 }
 
-                project.FilesPath = "~/Content/ProjectFile" + "\\" + project.Name;
+                project.FilesPath = "~/Content/ProjectFile" + "/" + project.Name;
                 db.Projects.Add(project);
                 db.SaveChanges();
                 return RedirectToAction("Index");

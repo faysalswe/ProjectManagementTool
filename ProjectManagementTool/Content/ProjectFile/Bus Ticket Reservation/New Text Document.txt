@@ -1,0 +1,3 @@
+UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
+ApplicationUser user = userManager.FindById(User.Identity.GetUserId());

@@ -41,25 +41,24 @@ namespace ProjectManagementTool.Controllers
         public ActionResult Create()
         {
             ViewBag.TaskId = new SelectList(db.Tasks, "Id", "Name");
+            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
             return View();
         }
 
-        // POST: Comments/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,TaskId,Comment1,DateTime")] Comment comment)
+        public ActionResult Create([Bind(Include = "Id,TaskId,Comment1,DateTime,commenterUserId")] Comment comment)
         {
             if (ModelState.IsValid)
             {
                 comment.commenterUserId = User.Identity.GetUserId();
+                comment.DateTime = DateTime.Now;
                 db.Comments.Add(comment);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.TaskId = new SelectList(db.Tasks, "Id", "Name", comment.TaskId);
+            ViewBag.TaskId = new SelectList(db.Tasks, "Id", "UserId", comment.TaskId);
             return View(comment);
         }
 
@@ -84,7 +83,7 @@ namespace ProjectManagementTool.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,TaskId,Comment1,DateTime")] Comment comment)
+        public ActionResult Edit([Bind(Include = "Id,TaskId,Comment1,DateTime,commenterUserId")] Comment comment)
         {
             if (ModelState.IsValid)
             {

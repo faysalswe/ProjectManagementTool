@@ -4,12 +4,12 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Index</h2>
-
+<br/>
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Add New Project", "Create", null, htmlAttributes: new { @class = "btn btn-primary" })
+    @Html.ActionLink("Assign Resourece", "Create", "AssignResources", null,htmlAttributes: new { @class="btn btn-primary" })
 </p>
+<h4>Project List</h4>
 <table class="table">
     <tr>
         <th>
@@ -19,24 +19,17 @@
             @Html.DisplayNameFor(model => model.CodeName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PossibleStartDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PossibleEndDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Duration)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FilesPath)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.Status)
         </th>
-        <th></th>
+        <th>
+            @Html.DisplayName("No of Members")
+        </th>
+        <th>
+            @Html.DisplayName("No of Tasks")
+        </th>
+        <th>
+            @Html.DisplayName("Project")
+        </th>
     </tr>
 
 @foreach (var item in Model) {
@@ -48,27 +41,17 @@
             @Html.DisplayFor(modelItem => item.CodeName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PossibleStartDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PossibleEndDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Duration)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FilesPath)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.Status)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @Html.DisplayName("10")
+        </td>
+        <td>
+            @Html.DisplayName("25")
+        </td>
+        
+        <td>
+            @Html.ActionLink("Details", "Details", new { id=item.Id }, htmlAttributes: new { @class = "btn btn-success" })
         </td>
     </tr>
 }
