@@ -8,7 +8,6 @@
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <h4>Create a new account.</h4>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
 
@@ -27,32 +26,34 @@
     <div class="form-group">
         @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control", @value="123456" })
         </div>
     </div>
-    @*<div class="form-group">
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-        </div>
-    </div>*@
 
     <div class="form-group">
         @Html.LabelFor(m => m.Status, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Status, new { @class = "form-control" })
+            @Html.RadioButtonFor(m => m.Status, "active") @Html.Label("Active")
+            @Html.RadioButtonFor(m => m.Status, "inactive") @Html.Label("Inactive")
         </div>
     </div>
 
     <div class="form-group">
         @Html.LabelFor(m => m.Designation, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Designation, new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.Designation, new List<SelectListItem>
+                {
+                    new SelectListItem() {Text = "Developer", Value="Developer"},
+                    new SelectListItem() {Text = "Project Manager", Value="ProjectManager"},
+                    new SelectListItem() {Text = "Team Lead", Value="TeamLead"},
+                    new SelectListItem() {Text = "QA Engineer", Value="QAEngineer"},
+                    new SelectListItem() {Text = "UX Engineer", Value="UXEngineer"},
+                }, htmlAttributes: new { @class = "form-control" , @size ="4"})
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Register" />
+            <input type="submit" class="btn btn-default" value="Add User" />
         </div>
     </div>
 }

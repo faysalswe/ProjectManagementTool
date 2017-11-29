@@ -74,12 +74,10 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-8">
-                @Html.DropDownListFor(model => model.Status, new List<SelectListItem>
-                {
-                    new SelectListItem() {Text = "Exemplo1", Value="Exemplo1"},
-                    new SelectListItem() {Text = "Exemplo2", Value="Exemplo2"},
-                    new SelectListItem() {Text = "Exemplo3", Value="Exemplo3"}
-                },  htmlAttributes : new { @class = "form-control" })
+                @Html.RadioButtonFor(m => m.Status, "NotStarted") @Html.Label("Not Started")<br />
+                @Html.RadioButtonFor(m => m.Status, "Started") @Html.Label("Started")<br />
+                @Html.RadioButtonFor(m => m.Status, "Completed") @Html.Label("Completed")<br />
+                @Html.RadioButtonFor(m => m.Status, "Cancelled") @Html.Label("Cancelled")
                 
                 @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
             </div>
