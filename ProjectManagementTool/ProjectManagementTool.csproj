@@ -230,6 +230,7 @@
     <Compile Include="Models\Project.cs">
       <DependentUpon>ApplicationDbContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProjectAssign.cs" />
     <Compile Include="Models\Task.cs">
       <DependentUpon>ApplicationDbContext.tt</DependentUpon>
     </Compile>

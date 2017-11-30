@@ -9,22 +9,21 @@ using System.Web.Mvc;
 using ProjectManagementTool.Models;
 using System.IO;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace ProjectManagementTool.Controllers
 {
+    [Authorize(Roles = "ProjectManager")]
     public class ProjectsController : Controller
     {
         private ProjectManagementToolEntities db = new ProjectManagementToolEntities();
-
-        // GET: Projects
-        [Authorize(Roles = "ProjectManager")]
+        private ApplicationDbContext adb = new ApplicationDbContext();
+        
         public ActionResult Index()
         {
             return View(db.Projects.ToList());
         }
 
-        // GET: Projects/Details/5
-        [Authorize(Roles = "ProjectManager")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -47,11 +46,15 @@ namespace ProjectManagementTool.Controllers
                 Files.Add(content);
             }
             ViewBag.FileList = Files;
+            var res = from s in db.AssignResources.Where(x => x.ProjectId == project.Id).AsEnumerable()
+                      join t in adb.Users.AsEnumerable()
+                      on s.UserId equals t.Id
+                      select new ProjectAssign { Name = t.Name, Designation = t.Designation, Id=t.Id };
+            ViewBag.Member = res.ToList();
+
             return View(project);
         }
 
-        // GET: Projects/Create
-        [Authorize(Roles = "ProjectManager")]
         public ActionResult Create()
         {
             return View();
@@ -60,7 +63,6 @@ namespace ProjectManagementTool.Controllers
        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "ProjectManager")]
         public ActionResult Create([Bind(Include = "Id,Name,CodeName,Description,PossibleStartDate,PossibleEndDate,Duration,FilesPath,Status,Files")] Project project)
         {
             if (ModelState.IsValid)
@@ -87,8 +89,6 @@ namespace ProjectManagementTool.Controllers
             return View(project);
         }
 
-        // GET: Projects/Edit/5
-        [Authorize(Roles = "ProjectManager")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -116,7 +116,6 @@ namespace ProjectManagementTool.Controllers
             return View(project);
         }
 
-        // GET: Projects/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -131,7 +130,6 @@ namespace ProjectManagementTool.Controllers
             return View(project);
         }
 
-        // POST: Projects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

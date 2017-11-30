@@ -5,81 +5,84 @@
 }
 
 <h4> Project Details</h4>
-    <hr />
+<hr />
 
-<div>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+@Html.AntiForgeryToken()
+<div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+    <div class="form-group">
+        @Html.LabelFor(model => model.CodeName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.CodeName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.CodeName, "", new { @class = "text-danger" })
+        </div>
+    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CodeName)
-        </dt>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <textarea class="form-control" rows="4" name="Description" readonly>@Model.Description </textarea>
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.CodeName)
-        </dd>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
+    <div class="form-group">
+        @Html.LabelFor(model => model.PossibleStartDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PossibleStartDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+    <div class="form-group">
+        @Html.LabelFor(model => model.PossibleEndDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PossibleEndDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.PossibleStartDate)
-        </dt>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Duration, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Duration, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.PossibleStartDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PossibleEndDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PossibleEndDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Duration)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Duration)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.FilesPath)
-        </dt>
-
-        <dd>
-           @foreach (var item in ViewBag.fileList)
-           {
-            <a href="@Url.Content(item.Path)">@item.Name</a><br />
-           }
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-
-    </dl>
+    <div class="form-group">
+        @Html.Label("Uploaded Files", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @foreach (var item in ViewBag.fileList)
+            {
+                <a href="@Url.Content(item.Path)">@item.Name</a>
+                <br/>
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Members", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+                @foreach (var item in ViewBag.Member)
+                {
+                    <label>@item.Name </label><label>----</label><label>@item.Designation</label> <br />
+                }
+        </div>
+    </div>
 </div>
-    
+
 <p>
     @Html.ActionLink("Back to List", "Index", null, htmlAttributes: new { @class = "btn btn-primary" })|
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, htmlAttributes: new { @class="btn btn-success"}) 
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-success" })
 </p>
