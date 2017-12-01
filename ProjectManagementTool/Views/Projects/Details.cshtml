@@ -76,13 +76,13 @@
         <div class="col-md-10">
                 @foreach (var item in ViewBag.Member)
                 {
-                    <label>@item.Name </label><label>----</label><label>@item.Designation</label> <br />
+                    <label>@item.Name </label><label>-------</label><label>@item.Designation</label> <br />
                 }
         </div>
     </div>
 </div>
 
 <p>
-    @Html.ActionLink("Back to List", "Index", null, htmlAttributes: new { @class = "btn btn-primary" })|
+    @Html.ActionLink("Back to List", "Index", null, htmlAttributes: new { @class = "btn btn-primary" })
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-success" })
 </p>

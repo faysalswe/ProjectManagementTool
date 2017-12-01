@@ -16,9 +16,15 @@ namespace ProjectManagementTool.Controllers
         private ProjectManagementToolEntities db = new ProjectManagementToolEntities();
 
         // GET: Comments
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
-            var comments = db.Comments.Include(c => c.Task);
+            //var comments = db.Comments.Include(c => c.Task);
+            if (id == null)
+                return RedirectToAction("Index","Tasks");
+                
+            var comments = db.Comments.Where(x => x.TaskId == id);
+            Task task = db.Tasks.Where(x => x.Id == id).FirstOrDefault();
+            ViewBag.Task = task;
             return View(comments.ToList());
         }
 

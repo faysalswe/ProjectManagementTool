@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ProjectManagementTool.Models.Project>
+﻿@model IEnumerable<ProjectManagementTool.Models.ProjectInfo>
 
 @{
     ViewBag.Title = "Index";
@@ -44,10 +44,10 @@
             @Html.DisplayFor(modelItem => item.Status)
         </td>
         <td>
-            @Html.DisplayName("10")
+            @Html.DisplayFor(modelItem => item.NumberOfMember)
         </td>
         <td>
-            @Html.DisplayName("25")
+            @Html.DisplayFor(modelItem => item.NumberOfTask)
         </td>
         
         <td>
@@ -55,5 +55,4 @@
         </td>
     </tr>
 }
-
 </table>

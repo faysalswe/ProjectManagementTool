@@ -13,17 +13,47 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace ProjectManagementTool.Controllers
 {
-    [Authorize(Roles = "ProjectManager")]
+    
     public class ProjectsController : Controller
     {
         private ProjectManagementToolEntities db = new ProjectManagementToolEntities();
         private ApplicationDbContext adb = new ApplicationDbContext();
-        
-        public ActionResult Index()
+        [Authorize(Roles = "ProjectManager")]
+        public ActionResult Index(int? id)
         {
-            return View(db.Projects.ToList());
-        }
+            //var result = db.AssignResources.Where(x => x.ProjectId == id).Distinct().Count();
+            //var query = @"select count(*) as count,dept.DNAME 
+            //            from emp 
+            //            inner join dept on emp.DEPTNO = dept.DEPTNO 
+            //            group by dept.DNAME";
 
+            var MemberCountByProject = from AssignResource in db.AssignResources
+                      group AssignResource.UserId by AssignResource.ProjectId into g
+                      select new { ProjectId = g.Key, NumberOfMember = g.Count() };
+   
+
+            var TaskCountByProject = from Task in db.Tasks
+                     group Task.Id by Task.ProjectId into g
+                     select new { ProjectId = g.Key, NumberOfTask = g.Count() };
+
+            var result = from Project in db.Projects
+                         join a in MemberCountByProject on
+                         Project.Id equals a.ProjectId
+                         join b in TaskCountByProject on
+                         Project.Id equals b.ProjectId
+                         select new ProjectInfo
+                         {
+                            Id = Project.Id,
+                            Name = Project.Name,
+                            CodeName = Project.CodeName,
+                            Status = Project.Status,
+                            NumberOfMember = a.NumberOfMember,
+                            NumberOfTask = b.NumberOfTask
+                         };
+            
+            return View(result.ToList());
+        }
+        [Authorize(Roles = "ProjectManager, Employee")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -54,13 +84,13 @@ namespace ProjectManagementTool.Controllers
 
             return View(project);
         }
-
+        [Authorize(Roles = "ProjectManager")]
         public ActionResult Create()
         {
             return View();
         }
 
-       
+        [Authorize(Roles = "ProjectManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,CodeName,Description,PossibleStartDate,PossibleEndDate,Duration,FilesPath,Status,Files")] Project project)
@@ -88,7 +118,7 @@ namespace ProjectManagementTool.Controllers
 
             return View(project);
         }
-
+        [Authorize(Roles = "ProjectManager")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -102,7 +132,7 @@ namespace ProjectManagementTool.Controllers
             }
             return View(project);
         }
-
+        [Authorize(Roles = "ProjectManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,CodeName,Description,PossibleStartDate,PossibleEndDate,Duration,FilesPath,Status")] Project project)
@@ -115,7 +145,7 @@ namespace ProjectManagementTool.Controllers
             }
             return View(project);
         }
-
+        [Authorize(Roles = "ProjectManager")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -129,7 +159,7 @@ namespace ProjectManagementTool.Controllers
             }
             return View(project);
         }
-
+        [Authorize(Roles = "ProjectManager")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

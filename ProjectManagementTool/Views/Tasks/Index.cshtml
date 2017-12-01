@@ -1,51 +1,102 @@
-﻿@model IEnumerable<ProjectManagementTool.Models.Task>
+﻿@using ProjectManagementTool.Models
+@model TaskIndex
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <br />
-<p>
-    @Html.ActionLink("Create New", "Create",null, htmlAttributes: new { @class = "btn btn-primary" })
-</p>
-<h4>Task List</h4>
+
+<h4>Project List</h4>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Project.Name)
+            @Html.DisplayName("Name")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayName("Short Name")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Duedate)
+            @Html.DisplayName("Status")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Priority)
+            @Html.DisplayName("No Of Members")
+        </th>
+        <th>
+            @Html.DisplayName("No Of Tasks")
         </th>
         <th>
 
         </th>
     </tr>
 
-@foreach (var item in Model) {
+    @foreach (ProjectInfo project in Model.ProjectInfos)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => project.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => project.CodeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => project.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => project.NumberOfMember)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => project.NumberOfTask)
+            </td>
+            <td>
+                @Html.ActionLink("Detail", "Details", "Projects", new { id = project.Id }, htmlAttributes: new { @class = "btn btn-success" })
+            </td>
+        </tr>
+    }
+</table>
+<br />
+<h4>Task List</h4>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Name")
+        </th>
+        <th>
+            @Html.DisplayName("Description")
+        </th>
+        <th>
+            @Html.DisplayName("Due Date")
+        </th>
+        <th>
+            @Html.DisplayName("Priority")
+        </th>
+        <th>
+
+        </th>
+    </tr>
+
+@foreach (Task task in Model.Tasks) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Project.Name)
+            @Html.DisplayFor(modelItem => task.Project.Name)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Description)
+            @Html.DisplayFor(modelItem => task.Description)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Duedate)
+            @Html.DisplayFor(modelItem => task.Duedate)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Priority)
+            @Html.DisplayFor(modelItem => task.Priority)
         </td>
         <td>
-            @Html.ActionLink("Comments", "Index","Comments",new { id=item.Id }, htmlAttributes: new { @class ="btn btn-success"})
+            @Html.ActionLink("Comments", "Index", "Comments", new { id = task.Id }, htmlAttributes: new { @class = "btn btn-success" })
         </td>
     </tr>
 }
-
 </table>
+<p>
+    @Html.ActionLink("Add New Task", "Create", null, htmlAttributes: new { @class = "btn btn-primary pull-right" })
+</p>
+<br />

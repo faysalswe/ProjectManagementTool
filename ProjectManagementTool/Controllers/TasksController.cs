@@ -20,8 +20,34 @@ namespace ProjectManagementTool.Controllers
         // GET: Tasks
         public ActionResult Index()
         {
-            var tasks = db.Tasks.Include(t => t.Project);
-            return View(tasks.ToList());
+            var MemberCountByProject = from AssignResource in db.AssignResources
+                                       group AssignResource.UserId by AssignResource.ProjectId into g
+                                       select new { ProjectId = g.Key, NumberOfMember = g.Count() };
+
+
+            var TaskCountByProject = from Task in db.Tasks
+                                     group Task.Id by Task.ProjectId into g
+                                     select new { ProjectId = g.Key, NumberOfTask = g.Count() };
+
+            var result = from Project in db.Projects
+                         join a in MemberCountByProject on
+                         Project.Id equals a.ProjectId
+                         join b in TaskCountByProject on
+                         Project.Id equals b.ProjectId
+                         select new ProjectInfo
+                         {
+                             Id = Project.Id,
+                             Name = Project.Name,
+                             CodeName = Project.CodeName,
+                             Status = Project.Status,
+                             NumberOfMember = a.NumberOfMember,
+                             NumberOfTask = b.NumberOfTask
+                         };
+
+            TaskIndex taskIndex = new TaskIndex();
+            taskIndex.ProjectInfos = result;
+            taskIndex.Tasks = db.Tasks.Include(t => t.Project);
+            return View(taskIndex);
         }
 
         // GET: Tasks/Details/5
