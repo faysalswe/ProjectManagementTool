@@ -81,7 +81,40 @@ namespace ProjectManagementTool.Controllers
             //RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
             //ApplicationUser user = userManager.FindById(User.Identity.GetUserId());
             ViewBag.UserRole = roles[0];
-            return View(project);
+            ProjectDetailViewModel projectDetailViewModel = new ProjectDetailViewModel();
+            projectDetailViewModel.project = project;
+            var a = from user in adb.Users.AsEnumerable()
+                    join task in db.Tasks
+                    on user.Id equals task.UserId
+                    select new
+                    {
+                        TaskId = task.Id,
+                        TaskName = task.Name,
+                        AssignToName = user.Name
+                    };
+            var b = from user in adb.Users.AsEnumerable()
+                    join task in db.Tasks
+                    on user.Id equals task.CreatorOwnerId
+                    select new
+                    {
+                        TaskId = task.Id,
+                        AssignByName = user.Name,
+                        Priority = task.Priority,
+                        DueDate = task.Duedate
+                    };
+            projectDetailViewModel.Tasks = from a1 in a
+                                           join b1 in b
+                                           on a1.TaskId equals b1.TaskId
+                                           select new TaskViewModel
+                                           {
+                                               Id = a1.TaskId,
+                                               TaskName = a1.TaskName,
+                                               AssignedTo = a1.AssignToName,
+                                               Priority = b1.Priority,
+                                               AssignedBy = b1.AssignByName,
+                                               DueDate = b1.DueDate
+                                           };
+            return View(projectDetailViewModel);
         }
 
         [Authorize(Roles = "ProjectManager")]

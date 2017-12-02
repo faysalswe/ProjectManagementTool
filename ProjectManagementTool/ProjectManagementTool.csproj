@@ -233,11 +233,13 @@
       <DependentUpon>ApplicationDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProjectAssign.cs" />
+    <Compile Include="Models\ProjectDetailViewModel.cs" />
     <Compile Include="Models\ProjectInfo.cs" />
     <Compile Include="Models\Task.cs">
       <DependentUpon>ApplicationDbContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TaskIndex.cs" />
+    <Compile Include="Models\TaskViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

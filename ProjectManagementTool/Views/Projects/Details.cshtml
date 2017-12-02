@@ -1,99 +1,168 @@
-﻿@model ProjectManagementTool.Models.Project
+﻿@using ProjectManagementTool.Models
+@model ProjectDetailViewModel
 @{
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <h4> Project Details</h4>
 <hr />
+<br />
+<div class="row">
+    <div class="col-md-4">
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.project.Name, htmlAttributes: new { @class = "control-label col" })
+                <div class="col">
+                    @Html.EditorFor(model => model.project.Name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                </div>
+            </div>
 
-@Html.AntiForgeryToken()
-<div class="form-horizontal">
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            <div class="form-group">
+                @Html.LabelFor(model => model.project.CodeName, htmlAttributes: new { @class = "control-label col" })
+                <div class="col">
+                    @Html.EditorFor(model => model.project.CodeName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.project.CodeName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.project.Description, htmlAttributes: new { @class = "control-label col" })
+                <div class="col">
+                    <textarea class="form-control" rows="4" name="Description" readonly>@Model.project.Description </textarea>
+                    @Html.ValidationMessageFor(model => model.project.Description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.project.Status, htmlAttributes: new { @class = "control-label col" })
+                <div class="col">
+                    @Html.EditorFor(model => model.project.Status, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.project.PossibleStartDate, htmlAttributes: new { @class = "control-label col" })
+                <div class="col">
+                    @Html.EditorFor(model => model.project.PossibleStartDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.project.PossibleEndDate, htmlAttributes: new { @class = "control-label col" })
+                <div class="col">
+                    @Html.EditorFor(model => model.project.PossibleEndDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.project.Duration, htmlAttributes: new { @class = "control-label col" })
+                <div class="col">
+                    @Html.EditorFor(model => model.project.Duration, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                </div>
+            </div>
         </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.CodeName, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.CodeName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-            @Html.ValidationMessageFor(model => model.CodeName, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <textarea class="form-control" rows="4" name="Description" readonly>@Model.Description </textarea>
-            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.PossibleStartDate, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.PossibleStartDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.PossibleEndDate, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.PossibleEndDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Duration, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Duration, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.Label("Uploaded Files", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @foreach (var item in ViewBag.fileList)
+        @{
+            if (ViewBag.UserRole == "Employee")
             {
-                <a href="@Url.Content(item.Path)">@item.Name</a>
-                <br/>
+        <p>
+            @Html.ActionLink("Back to List", "Index", "Tasks", null, htmlAttributes: new { @class = "btn btn-primary" })
+        </p>
             }
-        </div>
+            else
+            {
+        <p>
+            @Html.ActionLink("Back to List", "Index", null, htmlAttributes: new { @class = "btn btn-primary" })
+            @Html.ActionLink("Edit", "Edit", new { id = Model.project.Id }, htmlAttributes: new { @class = "btn btn-success" })
+        </p>
+            }
+        }
     </div>
-    <div class="form-group">
-        @Html.Label("Members", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-                @foreach (var item in ViewBag.Member)
-                {
-                    <label>@item.Name </label><label>-------</label><label>@item.Designation</label> <br />
+    <br />
+    <div class="col-md-8">
+        <div class="well">
+            @*<p>
+                @Html.ActionLink("Add New Task", "Create","Tasks",null, htmlAttributes: new { @class = "btn btn-primary pull-right" })
+            </p>*@
+            <h4>Task List</h4>
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayName("Name")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Assigned To")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Priority")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Assigned by")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Due Date")
+                    </th>
+                </tr>
+
+                @foreach (TaskViewModel task in Model.Tasks)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => task.TaskName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => task.AssignedTo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => task.Priority)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => task.AssignedBy)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => task.DueDate)
+                    </td>
+                </tr>
                 }
+            </table>
+        </div>
+        <div class="row well">
+            <div class="col-md-6">
+                @Html.Label("Uploaded Files", htmlAttributes: new { @class = "control-label col" })
+                <table class="table">
+                    @foreach (var item in ViewBag.fileList)
+                    {
+                    <tr>
+                        <td><a href="@Url.Content(item.Path)">@item.Name</a></td>
+                    </tr>
+
+
+                    }
+                </table>
+            </div>
+            <div class="col-md-6">
+                @Html.Label("Members", htmlAttributes: new { @class = "control-label col" })
+                <table class="table">
+                    <tr>
+                        <td> Name</td>
+                        <td> Desingnation</td>
+                    </tr>
+                    @foreach (var item in ViewBag.Member)
+                    {
+                    <tr>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.Designation
+                        </td>
+                    </tr>
+                    }
+                </table>
+            </div>
         </div>
     </div>
 </div>
-@{
-    if (ViewBag.UserRole == "Employee")
-    {
-        <p>
-            @Html.ActionLink("Back to List", "Index","Tasks", null, htmlAttributes: new { @class = "btn btn-primary" })
-        </p>
-    }
-    else
-    {
-        <p>
-            @Html.ActionLink("Back to List", "Index", null, htmlAttributes: new { @class = "btn btn-primary" })
-            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-success" })
-        </p>
-    }
-}
-
