@@ -220,9 +220,11 @@
     <Compile Include="Models\AssignResource.cs">
       <DependentUpon>ApplicationDbContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AssignResourceViewModel.cs" />
     <Compile Include="Models\Comment.cs">
       <DependentUpon>ApplicationDbContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CommentViewModel.cs" />
     <Compile Include="Models\Content.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />

@@ -81,8 +81,19 @@
         </div>
     </div>
 </div>
+@{
+    if (ViewBag.UserRole == "Employee")
+    {
+        <p>
+            @Html.ActionLink("Back to List", "Index","Tasks", null, htmlAttributes: new { @class = "btn btn-primary" })
+        </p>
+    }
+    else
+    {
+        <p>
+            @Html.ActionLink("Back to List", "Index", null, htmlAttributes: new { @class = "btn btn-primary" })
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-success" })
+        </p>
+    }
+}
 
-<p>
-    @Html.ActionLink("Back to List", "Index", null, htmlAttributes: new { @class = "btn btn-primary" })
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-success" })
-</p>

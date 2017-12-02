@@ -14,7 +14,7 @@ namespace ProjectManagementTool.Controllers
     public class CommentsController : Controller
     {
         private ProjectManagementToolEntities db = new ProjectManagementToolEntities();
-
+        private ApplicationDbContext adb = new ApplicationDbContext();
         // GET: Comments
         public ActionResult Index(int? id)
         {
@@ -22,7 +22,15 @@ namespace ProjectManagementTool.Controllers
             if (id == null)
                 return RedirectToAction("Index","Tasks");
                 
-            var comments = db.Comments.Where(x => x.TaskId == id);
+            var comments = from a in adb.Users.AsEnumerable()
+                           join b in db.Comments.Where(x => x.TaskId == id)
+                           on a.Id equals b.commenterUserId
+                           select new CommentViewModel {
+                              Id= b.Id ,
+                              Comment = b.Comment1,
+                              CommenterName = a.Name,
+                              DateTime = b.DateTime
+                           };
             Task task = db.Tasks.Where(x => x.Id == id).FirstOrDefault();
             ViewBag.Task = task;
             return View(comments.ToList());

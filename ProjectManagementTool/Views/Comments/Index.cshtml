@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ProjectManagementTool.Models.Comment>
+﻿@model IEnumerable<ProjectManagementTool.Models.CommentViewModel>
 
 @{
     ViewBag.Title = "Index";
@@ -29,7 +29,7 @@
             @Html.DisplayName("By")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DateTime)
+            @Html.DisplayName("Date Time")
         </th>
 
         
@@ -39,11 +39,11 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Comment1)
+                @Html.DisplayFor(modelItem => item.Comment)
             </td>
 
             <td>
-                @Html.DisplayFor(modelItem => item.commenterUserId)
+                @Html.DisplayFor(modelItem => item.CommenterName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DateTime)

@@ -18,14 +18,13 @@ namespace ProjectManagementTool.Controllers
         {
             ApplicationDbContext db = new ApplicationDbContext();
             UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var roles = userManager.GetRoles(User.Identity.GetUserId());
 
-            ApplicationUser user = userManager.FindById(User.Identity.GetUserId());
-
-            if (user.Designation == "ItAdmin" )
+            if (roles[0] == "ItAdmin" )
             {
                 return RedirectToAction("Index", "Account");
             }
-            else if (user.Designation == "ProjectManager")
+            else if (roles[0] == "ProjectManager")
             {
                 return RedirectToAction("Index", "Projects");
             }

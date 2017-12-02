@@ -19,14 +19,8 @@ namespace ProjectManagementTool.Controllers
         private ProjectManagementToolEntities db = new ProjectManagementToolEntities();
         private ApplicationDbContext adb = new ApplicationDbContext();
         [Authorize(Roles = "ProjectManager")]
-        public ActionResult Index(int? id)
+        public ActionResult Index()
         {
-            //var result = db.AssignResources.Where(x => x.ProjectId == id).Distinct().Count();
-            //var query = @"select count(*) as count,dept.DNAME 
-            //            from emp 
-            //            inner join dept on emp.DEPTNO = dept.DEPTNO 
-            //            group by dept.DNAME";
-
             var MemberCountByProject = from AssignResource in db.AssignResources
                       group AssignResource.UserId by AssignResource.ProjectId into g
                       select new { ProjectId = g.Key, NumberOfMember = g.Count() };
@@ -53,6 +47,7 @@ namespace ProjectManagementTool.Controllers
             
             return View(result.ToList());
         }
+
         [Authorize(Roles = "ProjectManager, Employee")]
         public ActionResult Details(int? id)
         {
@@ -81,9 +76,14 @@ namespace ProjectManagementTool.Controllers
                       on s.UserId equals t.Id
                       select new ProjectAssign { Name = t.Name, Designation = t.Designation, Id=t.Id };
             ViewBag.Member = res.ToList();
-
+            UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(adb));
+            var roles = userManager.GetRoles(User.Identity.GetUserId());
+            //RoleManager<IdentityRole> RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
+            //ApplicationUser user = userManager.FindById(User.Identity.GetUserId());
+            ViewBag.UserRole = roles[0];
             return View(project);
         }
+
         [Authorize(Roles = "ProjectManager")]
         public ActionResult Create()
         {

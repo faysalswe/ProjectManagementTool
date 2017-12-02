@@ -16,14 +16,24 @@ namespace ProjectManagementTool.Controllers
         private ProjectManagementToolEntities db = new ProjectManagementToolEntities();
         ApplicationDbContext context = new ApplicationDbContext();
 
-        // GET: AssignResources
         public ActionResult Index()
         {
-            var assignResources = db.AssignResources.Include(a => a.Project);
-            return View(assignResources.ToList());
+            //var assignResources = db.AssignResources.Include(a => a.Project);
+            var result = from user in context.Users.AsEnumerable()
+                         join resource in db.AssignResources
+                         on user.Id equals resource.UserId
+                         join project in db.Projects
+                         on resource.ProjectId equals project.Id
+                         select new AssignResourceViewModel
+                         {
+                             Id = resource.Id,
+                             ProjectName = project.Name,
+                             ResourcePerson = user.Name,
+                             Designation = user.Designation
+                         };
+            return View(result.ToList());
         }
 
-        // GET: AssignResources/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
