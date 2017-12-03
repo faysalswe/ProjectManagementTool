@@ -23,16 +23,17 @@ namespace ProjectManagementTool.Controllers
                                        group AssignResource.UserId by AssignResource.ProjectId into g
                                        select new { ProjectId = g.Key, NumberOfMember = g.Count() };
 
-
             var TaskCountByProject = from Task in db.Tasks
                                      group Task.Id by Task.ProjectId into g
                                      select new { ProjectId = g.Key, NumberOfTask = g.Count() };
-
+            string userId = User.Identity.GetUserId();
             var result = from Project in db.Projects
                          join a in MemberCountByProject on
                          Project.Id equals a.ProjectId
                          join b in TaskCountByProject on
                          Project.Id equals b.ProjectId
+                         join c in db.AssignResources.Where(x => x.UserId == userId) on
+                         Project.Id equals c.ProjectId
                          select new ProjectInfo
                          {
                              Id = Project.Id,
@@ -45,7 +46,7 @@ namespace ProjectManagementTool.Controllers
 
             TaskIndex taskIndex = new TaskIndex();
             taskIndex.ProjectInfos = result;
-            taskIndex.Tasks = db.Tasks.Include(t => t.Project);
+            taskIndex.Tasks = db.Tasks.Where(x => x.UserId == userId).Include(t => t.Project);
             return View(taskIndex);
         }
 
@@ -74,7 +75,7 @@ namespace ProjectManagementTool.Controllers
             }
             else
             {
-                ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
+                ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", id);
                 var UserByProjectId = from project in db.AssignResources.Where(x => x.ProjectId == id).AsEnumerable()
                                  join user in context.Users.AsEnumerable()
                                  on project.UserId equals user.Id

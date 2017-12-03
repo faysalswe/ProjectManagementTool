@@ -29,7 +29,7 @@ namespace ProjectManagementTool.Controllers
             var TaskCountByProject = from Task in db.Tasks
                      group Task.Id by Task.ProjectId into g
                      select new { ProjectId = g.Key, NumberOfTask = g.Count() };
-
+            
             var result = from Project in db.Projects
                          join a in MemberCountByProject on
                          Project.Id equals a.ProjectId
@@ -165,49 +165,39 @@ namespace ProjectManagementTool.Controllers
             }
             return View(project);
         }
+
         [Authorize(Roles = "ProjectManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,CodeName,Description,PossibleStartDate,PossibleEndDate,Duration,FilesPath,Status")] Project project)
+        public ActionResult Edit([Bind(Include = "Id,Name,CodeName,Description,PossibleStartDate,PossibleEndDate,Duration,FilesPath,Status,Files")] Project project)
         {
             if (ModelState.IsValid)
             {
+                project.CreatorOwnerId = User.Identity.GetUserId();
+                foreach (var file in project.Files)
+                {
+                    if( file != null)
+                    if (file.ContentLength > 0 )
+                    {
+                        var fileName = Path.GetFileName(file.FileName);
+                        var path = Path.Combine(Server.MapPath("~/Content/ProjectFile/" + project.Name), fileName);
+                        file.SaveAs(path);
+                    }
+                }
                 db.Entry(project).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(project);
         }
-        [Authorize(Roles = "ProjectManager")]
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Project project = db.Projects.Find(id);
-            if (project == null)
-            {
-                return HttpNotFound();
-            }
-            return View(project);
-        }
-        [Authorize(Roles = "ProjectManager")]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Project project = db.Projects.Find(id);
-            db.Projects.Remove(project);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
                 db.Dispose();
+                adb.Dispose();
             }
             base.Dispose(disposing);
         }

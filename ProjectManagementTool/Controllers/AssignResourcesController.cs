@@ -34,32 +34,13 @@ namespace ProjectManagementTool.Controllers
             return View(result.ToList());
         }
 
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            AssignResource assignResource = db.AssignResources.Find(id);
-            if (assignResource == null)
-            {
-                return HttpNotFound();
-            }
-            return View(assignResource);
-        }
-
-        
+     
         public ActionResult Create()
         {
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
             ViewBag.UserId = new SelectList(context.Users.Where(x => x.Designation != "ItAdmin" && x.Designation != "ProjectManager"), "Id", "Name");
             return View();
         }
-
-        //public JsonResult IsRecordAvailable(int ProjectId)
-        //{
-        //    return Json(, JsonRequestBehavior.AllowGet);
-        //}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -81,36 +62,6 @@ namespace ProjectManagementTool.Controllers
             return View(assignResource);
         }
 
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            AssignResource assignResource = db.AssignResources.Find(id);
-            if (assignResource == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", assignResource.ProjectId);
-            return View(assignResource);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,ProjectId,UserId")] AssignResource assignResource)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(assignResource).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", assignResource.ProjectId);
-            return View(assignResource);
-        }
-
-        
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -122,15 +73,6 @@ namespace ProjectManagementTool.Controllers
             {
                 return HttpNotFound();
             }
-            return View(assignResource);
-        }
-
-       
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            AssignResource assignResource = db.AssignResources.Find(id);
             db.AssignResources.Remove(assignResource);
             db.SaveChanges();
             return RedirectToAction("Index");
