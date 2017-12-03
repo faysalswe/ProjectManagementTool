@@ -17,7 +17,6 @@ namespace ProjectManagementTool.Controllers
         private ProjectManagementToolEntities db = new ProjectManagementToolEntities();
         ApplicationDbContext context = new ApplicationDbContext();
 
-        // GET: Tasks
         public ActionResult Index()
         {
             var MemberCountByProject = from AssignResource in db.AssignResources
@@ -50,7 +49,7 @@ namespace ProjectManagementTool.Controllers
             return View(taskIndex);
         }
 
-        // GET: Tasks/Details/5
+
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -65,11 +64,28 @@ namespace ProjectManagementTool.Controllers
             return View(task);
         }
 
-        // GET: Tasks/Create
-        public ActionResult Create()
+
+        public ActionResult Create(int? id)
         {
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
-            ViewBag.UserId = new SelectList(context.Users.Where(x => x.Designation != "ItAdmin" && x.Designation != "ProjectManager"), "Id", "Name");
+            if(id == null)
+            {
+                ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
+                ViewBag.UserId = new SelectList(context.Users.Where(x => x.Designation != "ItAdmin" && x.Designation != "ProjectManager"), "Id", "Name");
+            }
+            else
+            {
+                ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
+                var UserByProjectId = from project in db.AssignResources.Where(x => x.ProjectId == id).AsEnumerable()
+                                 join user in context.Users.AsEnumerable()
+                                 on project.UserId equals user.Id
+                                 select new 
+                                 {
+                                     Id = user.Id,
+                                     Name = user.Name
+                                 };
+                ViewBag.UserId = new SelectList(UserByProjectId.ToList(), "Id", "Name");
+                    //new SelectList(context.Users.Where(x => x.Designation != "ItAdmin" && x.Designation != "ProjectManager" ), "Id", "Name");
+            }
             return View();
         }
 

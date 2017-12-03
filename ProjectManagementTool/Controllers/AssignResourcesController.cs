@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity;
 
 namespace ProjectManagementTool.Controllers
 {
+    [Authorize(Roles ="ProjectManager")]
     public class AssignResourcesController : Controller
     {
         private ProjectManagementToolEntities db = new ProjectManagementToolEntities();
@@ -18,7 +19,6 @@ namespace ProjectManagementTool.Controllers
 
         public ActionResult Index()
         {
-            //var assignResources = db.AssignResources.Include(a => a.Project);
             var result = from user in context.Users.AsEnumerable()
                          join resource in db.AssignResources
                          on user.Id equals resource.UserId
@@ -48,7 +48,7 @@ namespace ProjectManagementTool.Controllers
             return View(assignResource);
         }
 
-        // GET: AssignResources/Create
+        
         public ActionResult Create()
         {
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
@@ -56,26 +56,31 @@ namespace ProjectManagementTool.Controllers
             return View();
         }
 
-        // POST: AssignResources/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        //public JsonResult IsRecordAvailable(int ProjectId)
+        //{
+        //    return Json(, JsonRequestBehavior.AllowGet);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,ProjectId,UserId")] AssignResource assignResource)
         {
             if (ModelState.IsValid)
             {
-                assignResource.AssignerId = User.Identity.GetUserId();
-                db.AssignResources.Add(assignResource);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (db.AssignResources.Any(x => x.ProjectId == assignResource.ProjectId && x.UserId == assignResource.UserId) == false)
+                {
+                  assignResource.AssignerId = User.Identity.GetUserId();
+                    db.AssignResources.Add(assignResource);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", assignResource.ProjectId);
+            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
+            ViewBag.UserId = new SelectList(context.Users.Where(x => x.Designation != "ItAdmin" && x.Designation != "ProjectManager"), "Id", "Name");
+            ViewBag.Msg = "";
             return View(assignResource);
         }
 
-        // GET: AssignResources/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -91,9 +96,6 @@ namespace ProjectManagementTool.Controllers
             return View(assignResource);
         }
 
-        // POST: AssignResources/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,ProjectId,UserId")] AssignResource assignResource)
@@ -108,7 +110,7 @@ namespace ProjectManagementTool.Controllers
             return View(assignResource);
         }
 
-        // GET: AssignResources/Delete/5
+        
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -123,7 +125,7 @@ namespace ProjectManagementTool.Controllers
             return View(assignResource);
         }
 
-        // POST: AssignResources/Delete/5
+       
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
